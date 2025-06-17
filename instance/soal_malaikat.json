@@ -1,0 +1,72 @@
+[
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Malaikat diciptakan oleh Allah dari ...",
+    "options": ["Api", "Air", "Tanah", "Cahaya"],
+    "correct_answer": "D"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Salah satu ciri malaikat adalah ...",
+    "options": ["Bisa menikah", "Tidak pernah membangkang perintah Allah", "Memiliki hawa nafsu", "Hidup di dunia seperti manusia"],
+    "correct_answer": "B"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Tugas malaikat Jibril adalah ...",
+    "options": ["Meniup sangkakala", "Menyampaikan wahyu", "Menjaga neraka", "Menjaga surga"],
+    "correct_answer": "B"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Malaikat yang mencatat amal baik manusia adalah ...",
+    "options": ["Raqib", "Atid", "Nakir", "Malik"],
+    "correct_answer": "A"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Siapakah malaikat yang bertugas mencabut nyawa?",
+    "options": ["Mikail", "Izrail", "Israfil", "Ridwan"],
+    "correct_answer": "B"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Malaikat yang bertugas meniup sangkakala adalah ...",
+    "options": ["Mikail", "Israfil", "Jibril", "Raqib"],
+    "correct_answer": "B"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Malaikat penjaga surga bernama ...",
+    "options": ["Malik", "Ridwan", "Nakir", "Izrail"],
+    "correct_answer": "B"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Apa hikmah beriman kepada malaikat?",
+    "options": ["Menambah rasa sombong", "Menjadi lebih malas beribadah", "Selalu berhati-hati dalam berbuat", "Tidak percaya pada takdir"],
+    "correct_answer": "C"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Malaikat Munkar dan Nakir bertugas untuk ...",
+    "options": ["Menyiksa di neraka", "Menanyai di alam kubur", "Menjaga kitab amal", "Memberi rezeki"],
+    "correct_answer": "B"
+  },
+  {
+    "materi": "Iman kepada Malaikat Allah",
+    "jenis": "Pilihan Ganda",
+    "pertanyaan": "Mengapa malaikat tidak pernah durhaka?",
+    "options": ["Karena mereka takut manusia", "Karena mereka tidak diberi pilihan", "Karena mereka tidak punya akal", "Karena mereka tidak punya hawa nafsu"],
+    "correct_answer": "D"
+  }
+] 

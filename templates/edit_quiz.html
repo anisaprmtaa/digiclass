@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Kuis - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white py-1">
+            <h3 class="mb-0">Edit Kuis</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" id="quizForm">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Judul Kuis</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ quiz.title }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required>{{ quiz.description }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="due_date" class="form-label">Batas Waktu</label>
+                    <input type="date" class="form-control" id="due_date" name="due_date" value="{{ quiz.due_date.strftime('%Y-%m-%d') }}" required>
+                </div>
+                <h4 class="mt-4 mb-3">Daftar Pertanyaan</h4>
+                <div id="questions">
+                    {% for question in quiz.questions %}
+                    <div class="card mb-3 question-card">
+                        <div class="card-body">
+                            <h5 class="mb-3">Pertanyaan {{ loop.index }}</h5>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="question[]" value="{{ question.question }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Pilihan Jawaban</label>
+                                <div class="options-container">
+                                    {% set opts = question.get_options() %}
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">A</span>
+                                        <input type="text" class="form-control" name="options[]" value="{{ opts[0] if opts|length > 0 else '' }}" required>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">B</span>
+                                        <input type="text" class="form-control" name="options[]" value="{{ opts[1] if opts|length > 1 else '' }}" required>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">C</span>
+                                        <input type="text" class="form-control" name="options[]" value="{{ opts[2] if opts|length > 2 else '' }}" required>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">D</span>
+                                        <input type="text" class="form-control" name="options[]" value="{{ opts[3] if opts|length > 3 else '' }}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Jawaban Benar</label>
+                                        <select class="form-select" name="correct_answer[]" required>
+                                            <option value="">Pilih jawaban benar</option>
+                                            <option value="A" {% if question.correct_answer == 'A' %}selected{% endif %}>A</option>
+                                            <option value="B" {% if question.correct_answer == 'B' %}selected{% endif %}>B</option>
+                                            <option value="C" {% if question.correct_answer == 'C' %}selected{% endif %}>C</option>
+                                            <option value="D" {% if question.correct_answer == 'D' %}selected{% endif %}>D</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Jawaban benar harus dipilih
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Poin</label>
+                                    <input type="number" class="form-control" name="points[]" value="{{ question.points }}" required>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm remove-question">Hapus Pertanyaan</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" class="btn btn-success mb-3" id="addQuestion">Tambah Pertanyaan</button>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Simpan Perubahan</button>
+                    <a href="{{ url_for('view_course', course_id=quiz.course.id) }}" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Batal</a>
+                </div>
+            </form>
+        </div>
+
+        <template id="questionTemplate">
+            <div class="card mb-3 question-card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Pertanyaan</label>
+                        <input type="text" class="form-control" name="question[]" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Pilihan Jawaban</label>
+                        <div class="options-container">
+                            <div class="input-group mb-2">
+                                <span class="input-group-text">A</span>
+                                <input type="text" class="form-control" name="options[]" required>
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text">B</span>
+                                <input type="text" class="form-control" name="options[]" required>
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text">C</span>
+                                <input type="text" class="form-control" name="options[]" required>
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text">D</span>
+                                <input type="text" class="form-control" name="options[]" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Jawaban Benar</label>
+                            <input type="text" class="form-control" name="correct_answer[]" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Poin</label>
+                            <input type="number" class="form-control" name="points[]" value="10" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm remove-question">Hapus Pertanyaan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+{% block scripts %}
+<script>
+document.getElementById('addQuestion').addEventListener('click', function() {
+    const template = document.getElementById('questionTemplate');
+    const clone = template.content.cloneNode(true);
+    document.getElementById('questions').appendChild(clone);
+});
+
+document.getElementById('questions').addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-question')) {
+        e.target.closest('.question-card').remove();
+    }
+});
+</script>
+{% endblock %}
+{% endblock %} 

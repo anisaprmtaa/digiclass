@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if course %}
+        Presensi - {{ course.title }}
+    {% else %}
+        Presensi
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Attendance Card -->
+        <div class="col-md-8 mx-auto">
+            {% if course %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-check me-2"></i>Presensi - {{ course.title }}
+                    </h5>
+                    <p class="small mb-0 mt-1">
+                        <i class="fas fa-user-tie me-1"></i>{{ teacher_names.get(course.instructor.username, course.instructor.username) }}
+                    </p>
+                </div>
+                <div class="card-body">
+                    {% if current_user.role == 'siswa' %}
+                    <!-- Student Attendance Form -->
+                    <form method="POST" action="{{ url_for('submit_attendance', course_id=course.id) }}">
+                        <div class="mb-4">
+                            <h6 class="mb-3">Status Kehadiran Hari Ini</h6>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-3">
+                                    <i class="fas fa-calendar-day fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">{{ today.strftime('%A, %d %B %Y') }}</h5>
+                                    <p class="text-muted mb-0">Jam: {{ current_time.strftime('%H:%M') }} WIB</p>
+                                </div>
+                            </div>
+                            
+                            {% if not has_attended %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>Anda belum melakukan presensi untuk mata pelajaran ini hari ini
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <select class="form-select" name="status" required>
+                                    <option value="hadir">Hadir</option>
+                                    <option value="sakit">Sakit</option>
+                                    <option value="izin">Izin</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Catatan (opsional)</label>
+                                <textarea class="form-control" name="notes" rows="3" placeholder="Tambahkan catatan jika diperlukan"></textarea>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check me-2"></i>Kirim Presensi
+                                </button>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>Anda sudah melakukan presensi untuk mata pelajaran ini hari ini
+                                <p class="mb-0 mt-2">
+                                    <strong>Status:</strong> {{ attendance.status|title }}<br>
+                                    {% if attendance and attendance.notes %}
+                                    <strong>Catatan:</strong> {{ attendance.notes }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+
+                    <!-- Attendance History -->
+                    <div class="mt-4">
+                        <h6 class="mb-3">Riwayat Kehadiran - {{ course.title }}</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Status</th>
+                                        <th>Waktu Presensi</th>
+                                        <th>Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if attendance_history %}
+                                    {% for record in attendance_history %}
+                                    <tr>
+                                        <td>{{ record.date.strftime('%d/%m/%Y') }}</td>
+                                        <td>
+                                            {% if record.status == 'hadir' %}
+                                            <span class="badge bg-success">Hadir</span>
+                                            {% elif record.status == 'sakit' %}
+                                            <span class="badge bg-warning">Sakit</span>
+                                            {% else %}
+                                            <span class="badge bg-info">Izin</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ record.time.strftime('%H:%M') }}</td>
+                                        <td>{{ record.notes or '-' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">Belum ada riwayat kehadiran</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <!-- Teacher Attendance Management -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Rekap Kehadiran Siswa - {{ course.title }}</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <select class="form-select" id="classFilter">
+                                    <option value="">Semua Kelas</option>
+                                    {% if classes %}
+                                    {% for class in classes %}
+                                    <option value="{{ class }}">{{ class }}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="date" class="form-control" id="dateFilter">
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive mt-3">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama Siswa</th>
+                                        <th>Kelas</th>
+                                        <th>Status</th>
+                                        <th>Waktu</th>
+                                        <th>Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if student_attendance %}
+                                    {% for record in student_attendance %}
+                                    <tr>
+                                        <td>{{ record.student.username }}</td>
+                                        <td>{{ record.student.kelas }}</td>
+                                        <td>
+                                            {% if record.status == 'hadir' %}
+                                            <span class="badge bg-success">Hadir</span>
+                                            {% elif record.status == 'sakit' %}
+                                            <span class="badge bg-warning">Sakit</span>
+                                            {% else %}
+                                            <span class="badge bg-info">Izin</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ record.time.strftime('%H:%M') }}</td>
+                                        <td>{{ record.notes or '-' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">Belum ada data kehadiran untuk hari ini</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Statistics -->
+                    {% if stats %}
+                    <div class="row g-4 mt-2">
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white">
+                                <div class="card-body text-center">
+                                    <h3 class="mb-0">{{ stats.present }}%</h3>
+                                    <small>Hadir</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body text-center">
+                                    <h3 class="mb-0">{{ stats.sick }}%</h3>
+                                    <small>Sakit</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-info text-white">
+                                <div class="card-body text-center">
+                                    <h3 class="mb-0">{{ stats.permission }}%</h3>
+                                    <small>Izin</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>Data mata pelajaran tidak ditemukan
+            </div>
+            {% endif %}
+
+            <!-- Back Button -->
+            <div class="mt-3">
+                <a href="{{ url_for('view_course', course_id=course.id if course else 0) }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Kembali ke Materi pembelajaran
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.table th {
+    font-weight: 600;
+}
+.badge {
+    font-weight: 500;
+    padding: 6px 12px;
+}
+</style>
+
+<script>
+// Filter functionality for teacher's view
+document.addEventListener('DOMContentLoaded', function() {
+    const classFilter = document.getElementById('classFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    
+    if (classFilter && dateFilter) {
+        classFilter.addEventListener('change', updateFilters);
+        dateFilter.addEventListener('change', updateFilters);
+    }
+});
+
+function updateFilters() {
+    const classValue = document.getElementById('classFilter').value;
+    const dateValue = document.getElementById('dateFilter').value;
+    
+    fetch(`{{ url_for('filter_attendance', course_id=course.id) }}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            class: classValue,
+            date: dateValue
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update table with new data
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = data.map(record => `
+            <tr>
+                <td>${record.student_name}</td>
+                <td>${record.class}</td>
+                <td>
+                    <span class="badge bg-${record.status === 'hadir' ? 'success' : record.status === 'sakit' ? 'warning' : 'info'}">
+                        ${record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                    </span>
+                </td>
+                <td>${record.time}</td>
+                <td>${record.notes}</td>
+            </tr>
+        `).join('');
+    });
+}
+</script>
+{% endblock %} 

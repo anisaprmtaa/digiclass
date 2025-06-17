@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Tugas - {{ course.title }} - DigiClass{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-tasks me-2"></i>Tambah Tugas Baru
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Judul Tugas</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Deskripsi Tugas</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="due_date" class="form-label">Batas Waktu Pengumpulan</label>
+                            <input type="date" class="form-control" id="due_date" name="due_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task_file" class="form-label">File Tugas/Referensi (Opsional)</label>
+                            <input type="file" class="form-control" id="task_file" name="task_file">
+                            <div class="form-text"><i class="fas fa-info-circle me-1"></i>
+                                Format yang diizinkan: PDF, DOC, DOCX, PPT, PPTX, dll. Maksimal 16MB.</div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Simpan Tugas</button>
+                            <a href="{{ url_for('view_course', course_id=course.id) }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>
+                                Batal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

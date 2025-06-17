@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% from "components/course_card.html" import course_card %}
+
+{% block title %}Mata Pelajaran{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="mb-0">
+                <i class="fas fa-book me-2"></i>
+                Mata Pelajaran
+            </h2>
+            <p class="text-muted">Daftar mata pelajaran yang tersedia</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <div class="d-flex justify-content-md-end align-items-center gap-3">
+                <div class="view-toggle btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+                <div class="search-box">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" id="courseSearch" 
+                               placeholder="Cari mata pelajaran...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if courses %}
+    <div id="courseGrid" class="row g-4">
+        {% for course in courses %}
+        <div class="col-md-6 col-lg-4 course-item" data-title="{{ course.title.lower() }}">
+            {{ course_card(course, 'grid') }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="courseList" class="d-none">
+        {% for course in courses %}
+        <div class="course-item" data-title="{{ course.title.lower() }}">
+            {{ course_card(course, 'list') }}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-book-open fa-4x mb-3 text-muted"></i>
+        <h4>Belum ada mata pelajaran</h4>
+        <p class="text-muted">Mata pelajaran akan ditampilkan di sini setelah ditambahkan.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.search-box {
+    max-width: 300px;
+}
+
+.search-box .input-group-text {
+    border-right: none;
+}
+
+.search-box .form-control {
+    border-left: none;
+}
+
+.search-box .form-control:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
+}
+
+.search-box .form-control:focus + .input-group-text {
+    border-color: #dee2e6;
+}
+
+.view-toggle .btn {
+    padding: 0.5rem 1rem;
+}
+
+.view-toggle .btn i {
+    width: 16px;
+}
+
+.course-item.hidden {
+    display: none !important;
+}
+
+/* Animasi fade untuk transisi view */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle view
+    const gridView = document.getElementById('courseGrid');
+    const listView = document.getElementById('courseList');
+    const viewButtons = document.querySelectorAll('.view-toggle button');
+    
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const view = this.dataset.view;
+            
+            // Update buttons
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update view
+            if (view === 'grid') {
+                gridView.classList.remove('d-none');
+                listView.classList.add('d-none');
+            } else {
+                gridView.classList.add('d-none');
+                listView.classList.remove('d-none');
+            }
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('courseSearch');
+    const courseItems = document.querySelectorAll('.course-item');
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        courseItems.forEach(item => {
+            const title = item.dataset.title;
+            if (title.includes(searchTerm)) {
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

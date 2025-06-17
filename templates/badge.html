@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Lencana Siswa{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Lencana Pencapaian Siswa</h2>
+    <p class="lead text-center mb-5">
+        Kumpulkan lencana ini untuk menunjukkan dedikasi dan pencapaian Anda dalam setiap aspek pembelajaran.
+    </p>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 text-center badge-card {% if badge_materi != '-' %}badge-achieved{% else %}badge-locked{% endif %}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        {% if badge_materi != '-' %}
+                            <i class="fas fa-book-open fa-4x text-info mb-3"></i>
+                        {% else %}
+                            <i class="fas fa-lock fa-4x text-muted mb-3"></i>
+                        {% endif %}
+                        <h5 class="card-title">Lencana Materi</h5>
+                        <span class="badge mb-2 {% if badge_materi != '-' %}bg-info{% else %}bg-secondary{% endif %}">{{ badge_materi }}</span>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">Selesaikan semua materi untuk mendapatkan lencana ini.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 text-center badge-card {% if badge_kuis != '-' %}badge-achieved{% else %}badge-locked{% endif %}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        {% if badge_kuis != '-' %}
+                            <i class="fas fa-question-circle fa-4x text-success mb-3"></i>
+                        {% else %}
+                            <i class="fas fa-lock fa-4x text-muted mb-3"></i>
+                        {% endif %}
+                        <h5 class="card-title">Lencana Kuis</h5>
+                        <span class="badge mb-2 {% if badge_kuis != '-' %}bg-success{% else %}bg-secondary{% endif %}">{{ badge_kuis }}</span>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">Kerjakan semua kuis untuk mendapatkan lencana ini.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 text-center badge-card {% if badge_tugas != '-' %}badge-achieved{% else %}badge-locked{% endif %}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        {% if badge_tugas != '-' %}
+                            <i class="fas fa-tasks fa-4x text-warning mb-3"></i>
+                        {% else %}
+                            <i class="fas fa-lock fa-4x text-muted mb-3"></i>
+                        {% endif %}
+                        <h5 class="card-title">Lencana Tugas</h5>
+                        <span class="badge mb-2 {% if badge_tugas != '-' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ badge_tugas }}</span>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">Kumpulkan semua tugas untuk mendapatkan lencana ini.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 text-center badge-card {% if badge_nilai != '-' %}badge-achieved{% else %}badge-locked{% endif %}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        {% if badge_nilai != '-' %}
+                            <i class="fas fa-medal fa-4x text-warning mb-3"></i>
+                        {% else %}
+                            <i class="fas fa-lock fa-4x text-muted mb-3"></i>
+                        {% endif %}
+                        <h5 class="card-title">Lencana Nilai Akhir</h5>
+                        <span class="badge mb-2 {% if badge_nilai != '-' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ badge_nilai }}</span>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">Dapatkan nilai akhir minimal 90 untuk lencana emas, 80 untuk perak, 70 untuk perunggu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.badge {
+    font-size: 1.2rem;
+    padding: 0.8em 1.6em;
+}
+.badge-card {
+    box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+.badge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+}
+.badge-locked {
+    opacity: 0.6;
+    filter: grayscale(100%);
+}
+.badge-locked .card-title, .badge-locked .text-muted {
+    color: #6c757d !important;
+}
+.badge-achieved {
+    border: 2px solid;
+}
+.badge-achieved.text-center .text-info {
+    color: #0dcaf0 !important; /* Bootstrap info */
+}
+.badge-achieved.text-center .text-success {
+    color: #198754 !important; /* Bootstrap success */
+}
+.badge-achieved.text-center .text-warning {
+    color: #ffc107 !important; /* Bootstrap warning */
+}
+.badge-achieved.text-center .text-primary {
+    color: #0d6efd !important; /* Bootstrap primary */
+}
+</style>
+{% endblock %} 

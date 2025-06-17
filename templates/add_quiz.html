@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Kuis - {{ course.title }} - DigiClass{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>Tambah Kuis Baru - {{ course.title }}
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="quizForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">
+                                <i class="fas fa-heading me-2"></i>Judul Kuis
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="title" name="title" required
+                                placeholder="Masukkan judul kuis">
+                            <div class="invalid-feedback">
+                                Judul kuis harus diisi
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-info-circle me-2"></i>Deskripsi
+                            </label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                    placeholder="Jelaskan tentang kuis ini..."></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="due_date" class="form-label">
+                                <i class="fas fa-calendar-alt me-2"></i>Batas Waktu
+                            </label>
+                            <input type="date" class="form-control" id="due_date" name="due_date" required>
+                            <div class="invalid-feedback">
+                                Batas waktu harus diisi
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-list-ol me-2"></i>Daftar Pertanyaan
+                                </h5>
+                            </div>
+                            <div class="card-body" id="questions-container">
+                                <!-- Template pertanyaan akan ditambahkan di sini -->
+                            </div>
+                            <div class="card-footer bg-light">
+                                <button type="button" class="btn btn-success" onclick="addQuestion()">
+                                    <i class="fas fa-plus me-2"></i>Tambah Pertanyaan
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Simpan Kuis
+                            </button>
+                            <a href="{{ url_for('view_course', course_id=course.id) }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>
+                                Batal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <template id="question-template">
+            <div class="question-item border rounded p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Pertanyaan <span class="question-number"></span></h6>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeQuestion(this)">
+                        <i class="fas fa-trash me-1"></i>Hapus
+                    </button>
+                </div>
+                
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="questions[]" required
+                        placeholder="Tulis pertanyaan di sini...">
+                    <div class="invalid-feedback">
+                        Pertanyaan harus diisi
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Pilihan Jawaban</label>
+                    <div class="options-container">
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">A</span>
+                            <input type="text" class="form-control" name="options[]" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">B</span>
+                            <input type="text" class="form-control" name="options[]" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">C</span>
+                            <input type="text" class="form-control" name="options[]" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">D</span>
+                            <input type="text" class="form-control" name="options[]" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Jawaban Benar</label>
+                            <select class="form-select" name="correct_answers[]" required>
+                                <option value="">Pilih jawaban benar</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Jawaban benar harus dipilih
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Poin</label>
+                            <input type="number" class="form-control" name="points[]" 
+                                value="10" min="1" max="100" required>
+                            <div class="invalid-feedback">
+                                Poin harus diisi (1-100)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.btn {
+    transition: all 0.3s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.question-item {
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+.question-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+
+<script>
+let questionCount = 0;
+
+function addQuestion() {
+    questionCount++;
+    const template = document.getElementById('question-template');
+    const clone = template.content.cloneNode(true);
+    
+    // Update question number
+    clone.querySelector('.question-number').textContent = questionCount;
+    
+    // Add to container
+    document.getElementById('questions-container').appendChild(clone);
+    
+    // Re-initialize form validation
+    validateForm();
+}
+
+function removeQuestion(button) {
+    const questionItem = button.closest('.question-item');
+    questionItem.remove();
+    
+    // Update question numbers
+    const questions = document.querySelectorAll('.question-number');
+    questions.forEach((q, index) => {
+        q.textContent = index + 1;
+    });
+    questionCount = questions.length;
+}
+
+function validateForm() {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+}
+
+// Add first question on page load
+document.addEventListener('DOMContentLoaded', function() {
+    addQuestion();
+    validateForm();
+});
+</script>
+{% endblock %} 

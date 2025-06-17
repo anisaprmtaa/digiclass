@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Materi - {{ course.title }} - DigiClass{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>Tambah Materi Baru - {{ course.title }}
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">
+                                <i class="fas fa-heading me-1"></i>Judul Materi
+                            </label>
+                            <input type="text" class="form-control form-control-lg" 
+                                   id="title" name="title" required
+                                   placeholder="Masukkan judul materi">
+                            <div class="invalid-feedback">
+                                Judul materi harus diisi
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="content" class="form-label">
+                                <i class="fas fa-file-alt me-1"></i>Konten Materi
+                            </label>
+                            <textarea class="form-control" id="content" name="content" rows="15" required placeholder="Tulis materi pembelajaran di sini..."></textarea>
+                            <div class="invalid-feedback">
+                                Konten materi harus diisi
+                            </div>
+                            <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <strong>Catatan:</strong> Silakan isi konten materi menggunakan format HTML agar tersusun rapi.<br>
+                            Gunakan tag seperti: <code>&lt;h2&gt;</code> untuk judul, <code>&lt;p&gt;</code> untuk paragraf, 
+                            <code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code> untuk daftar, dan <code>&lt;strong&gt;</code> atau 
+                            <code>&lt;em&gt;</code> untuk penekanan.<br><br>
+                            </small>
+                        </div> 
+
+                        <div class="mb-4">
+                            <label for="youtube_url" class="form-label">
+                                <i class="fab fa-youtube text-danger me-1"></i>Link Video YouTube
+                            </label>
+                            <div class="input-group">
+                                <input type="url" class="form-control" id="youtube_url" name="youtube_url" 
+                                       placeholder="https://www.youtube.com/watch?v=...">
+                                <button class="btn btn-outline-primary" type="button" id="previewBtn">
+                                    <i class="fas fa-eye me-1"></i>Preview
+                                </button>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Format yang didukung: youtube.com/watch?v= atau youtu.be/
+                            </small>
+                            <div id="youtubePreview" class="mt-3 d-none">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Preview Video</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="ratio ratio-16x9">
+                                            <iframe id="youtubeFrame" src="" 
+                                                    title="YouTube video player" 
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                    allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="material_file" class="form-label">
+                                <i class="fas fa-file-upload me-1"></i>Upload File Materi (opsional)
+                            </label>
+                            <input type="file" class="form-control" id="material_file" name="material_file">
+                            <div class="form-text"><i class="fas fa-info-circle me-1"></i>
+                                Format yang diizinkan: PDF, DOC, DOCX, PPT, PPTX, dll. Maksimal 16MB.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Simpan Materi
+                            </button>
+                            <a href="{{ url_for('view_course', course_id=course.id) }}" 
+                            class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Batal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.btn {
+    transition: all 0.3s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+#content {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+</style>
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+
+// YouTube preview functionality
+document.getElementById('previewBtn').addEventListener('click', function() {
+    const youtubeUrl = document.getElementById('youtube_url').value;
+    let videoId = null;
+    
+    if (youtubeUrl.includes('youtube.com/watch?v=')) {
+        videoId = youtubeUrl.split('watch?v=')[1].split('&')[0];
+    } else if (youtubeUrl.includes('youtu.be/')) {
+        videoId = youtubeUrl.split('youtu.be/')[1];
+    }
+    
+    if (videoId) {
+        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        document.getElementById('youtubeFrame').src = embedUrl;
+        document.getElementById('youtubePreview').classList.remove('d-none');
+    } else {
+        alert('URL YouTube tidak valid. Pastikan URL dalam format yang benar.');
+    }
+});
+
+// Auto-expand textarea
+document.getElementById('content').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+
+tinymce.init({
+  selector: '#content',
+  plugins: 'lists link image table code',
+  toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor | fontselect fontsizeselect | link image table | code',
+  menubar: false,
+  branding: false,
+  height: 400,
+  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+  forced_root_block: 'p',
+  convert_urls: false
+});
+</script>
+{% endblock %} 

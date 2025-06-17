@@ -1,0 +1,1236 @@
+{% extends "base.html" %}
+{% block title %}Beranda{% endblock %}
+
+{% block head %}
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        padding: 8rem 0;
+        position: relative;
+        overflow: hidden;
+        color: var(--white);
+    }
+
+    .hero-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+    }
+
+    .shape-1 {
+        width: 300px;
+        height: 300px;
+        top: -150px;
+        right: -150px;
+    }
+
+    .shape-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -100px;
+        left: -100px;
+    }
+
+    .welcome-text {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: rgba(255,255,255,0.1);
+        padding: 0.75rem 1.5rem;
+        border-radius: 30px;
+        display: inline-block;
+    }
+
+    .main-slogan {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+        background: linear-gradient(to right, #fff, rgba(255,255,255,0.8));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-description {
+        font-size: 1.25rem;
+        color: rgba(255,255,255,0.9);
+        line-height: 1.8;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+    }
+
+    /* Hero Section Animations */
+    .hero-icons-wrapper {
+        position: relative;
+        height: 400px;
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .hero-icon {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: float 6s ease-in-out infinite;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-icon i {
+        font-size: 2rem;
+        color: var(--white);
+    }
+
+    .hero-icon:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .hero-icon:nth-child(2) {
+        top: 40%;
+        left: 30%;
+        animation-delay: 1.5s;
+    }
+
+    .hero-icon:nth-child(3) {
+        top: 60%;
+        left: 50%;
+        animation-delay: 3s;
+    }
+
+    .hero-icon:nth-child(4) {
+        top: 30%;
+        left: 70%;
+        animation-delay: 4.5s;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-20px) rotate(5deg);
+        }
+        100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+    }
+
+    /* Add pulse animation for icon glow */
+    .hero-icon::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        z-index: -1;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 6rem 0;
+        }
+
+        .main-slogan {
+            font-size: 2.5rem;
+        }
+
+        .hero-icons-wrapper {
+            height: 300px;
+        }
+
+        .hero-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .hero-icon i {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 8rem 0;
+        background: var(--white);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .features-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, #2563eb, #38bdf8);
+    }
+
+    /* Features Section Header */
+    .section-header {
+        text-align: center;
+        margin-bottom: 5rem;
+        position: relative;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .section-subtitle {
+        color: var(--primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        background: rgba(37, 99, 235, 0.1);
+        border-radius: 30px;
+        font-size: 0.9rem;
+        position: relative;
+    }
+
+    .section-subtitle::before,
+    .section-subtitle::after {
+        content: '';
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        width: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .section-subtitle::before {
+        right: 100%;
+        margin-right: 15px;
+    }
+
+    .section-subtitle::after {
+        left: 100%;
+        margin-left: 15px;
+    }
+
+    .section-title {
+        font-size: 2.75rem;
+        font-weight: 800;
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+        background: linear-gradient(45deg, var(--dark), var(--primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .section-description {
+        font-size: 1.1rem;
+        color: var(--body-color);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.8;
+        opacity: 0.9;
+    }
+
+    .feature-card {
+        background: var(--white);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 3rem;
+        height: 100%;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        transition: opacity 0.4s ease;
+        opacity: 0;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+    }
+
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        position: relative;
+        background: var(--primary);
+        box-shadow: 0 15px 30px rgba(37, 99, 235, 0.2);
+        transition: transform 0.4s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .feature-icon i {
+        font-size: 2rem;
+        color: var(--white);
+        transition: transform 0.4s ease;
+    }
+
+    .feature-card:hover .feature-icon i {
+        transform: scale(1.1);
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 1.25rem;
+    }
+
+    .feature-description {
+        color: var(--body-color);
+        margin-bottom: 2rem;
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+
+    .feature-list {
+        margin-bottom: 2rem;
+        flex-grow: 1;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        color: var(--body-color);
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover {
+        transform: translateX(5px);
+    }
+
+    .feature-item i {
+        color: var(--primary);
+        margin-right: 1rem;
+        font-size: 1.25rem;
+    }
+
+    .feature-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: auto;
+    }
+
+    .feature-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: rgba(37, 99, 235, 0.1);
+        border-radius: 30px;
+        font-size: 0.95rem;
+        color: var(--primary);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .feature-tag:hover {
+        background: var(--primary);
+        color: var(--white);
+        transform: translateY(-3px);
+    }
+
+    .feature-tag i {
+        margin-right: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+        .features-section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.8rem;
+            padding: 0.5rem 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .section-subtitle::before,
+        .section-subtitle::after {
+            width: 30px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .section-description {
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+        }
+    }
+
+    /* Course Section */
+    .course-section {
+        padding: 6rem 0;
+        background: var(--body-bg);
+    }
+
+    .course-header {
+        margin-bottom: 3rem;
+    }
+
+    .search-box {
+        max-width: 300px;
+        margin-left: auto;
+    }
+
+    .search-box .form-control {
+        border: none;
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1.25rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .course-card {
+        background: var(--white);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        height: 100%;
+        transition: var(--transition);
+    }
+
+    .course-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .course-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .course-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .course-icon i {
+        font-size: 1.5rem;
+        color: var(--white);
+    }
+
+    .course-instructor {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .instructor-photo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .instructor-name {
+        font-size: 0.9rem;
+        color: var(--body-color);
+    }
+
+    .course-content {
+        padding: 1.5rem;
+    }
+
+    .course-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 1rem;
+    }
+
+    .course-description {
+        color: var(--body-color);
+        margin-bottom: 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .course-stats {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--light);
+        border-radius: 20px;
+        font-size: 0.875rem;
+        color: var(--dark);
+    }
+
+    .stat-badge i {
+        color: var(--primary);
+    }
+
+    .course-footer {
+        padding: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        text-align: right;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--white);
+        border-radius: var(--border-radius);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--border-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state h4 {
+        color: var(--dark);
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: var(--body-color);
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 4rem 0;
+        }
+
+        .main-slogan {
+            font-size: 2.5rem;
+        }
+
+        .hero-stats {
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .search-box {
+            max-width: 100%;
+            margin: 1rem 0;
+        }
+    }
+
+    /* Feature Card Gradients */
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    }
+
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    }
+
+    /* Hero Section Responsive */
+    @media (max-width: 768px) {
+        .hero-icons-wrapper {
+            height: 300px;
+        }
+
+        .hero-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .hero-icon i {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Back Button Styles */
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+        color: var(--white);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-top: 2rem;
+        text-decoration: none;
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+        color: var(--white);
+    }
+
+    .back-button i {
+        margin-right: 0.75rem;
+    }
+
+    .back-button.dark {
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--primary);
+    }
+
+    .back-button.dark:hover {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1000;
+    }
+
+    .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .back-button {
+            padding: 0.5rem 1.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .back-to-top {
+            bottom: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    /* Back Navigation Button */
+    .back-nav-button {
+        position: fixed;
+        top: 2rem;
+        left: 2rem;
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: rgba(37, 99, 235, 0.1);
+        border-radius: 30px;
+        color: var(--primary);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+
+    .back-nav-button:hover {
+        background: var(--primary);
+        color: var(--white);
+        transform: translateX(-3px);
+    }
+
+    .back-nav-button i {
+        margin-right: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+        .back-nav-button {
+            top: 1rem;
+            left: 1rem;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Section Navigation Buttons */
+    .section-nav {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .section-nav-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: rgba(37, 99, 235, 0.1);
+        border-radius: 30px;
+        color: var(--primary);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+
+    .section-nav-button:hover {
+        background: var(--primary);
+        color: var(--white);
+        transform: translateY(-3px);
+    }
+
+    .section-nav-button i {
+        margin-right: 0.75rem;
+    }
+
+    .section-nav-button.light {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--white);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .section-nav-button.light:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--white);
+    }
+
+    @media (max-width: 768px) {
+        .section-nav {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-nav-button {
+            padding: 0.5rem 1.25rem;
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+        }
+    }
+
+    /* User Role Badge */
+    .user-role-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1.25rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--white);
+        transition: all 0.3s ease;
+    }
+
+    .user-role-badge:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .user-role-badge i {
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+
+    .user-role-badge.guru {
+        background: rgba(5, 150, 105, 0.2);
+        border-color: rgba(5, 150, 105, 0.3);
+    }
+
+    .user-role-badge.guru:hover {
+        background: rgba(5, 150, 105, 0.3);
+    }
+
+    .user-role-badge.siswa {
+        background: rgba(37, 99, 235, 0.2);
+        border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .user-role-badge.siswa:hover {
+        background: rgba(37, 99, 235, 0.3);
+    }
+
+    .user-welcome {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .user-name {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .user-role-badge {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .user-role-badge i {
+            font-size: 1rem;
+        }
+
+        .user-name {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Remove user welcome styles */
+    .user-welcome, .user-role-badge, .user-name {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Back Navigation Button -->
+<a href="javascript:void(0)" class="back-nav-button" id="backNavButton">
+    <i class="fas fa-arrow-left"></i>Kembali
+</a>
+
+<!-- Hero Section -->
+<section class="hero-section" id="hero">
+    <div class="hero-shape shape-1"></div>
+    <div class="hero-shape shape-2"></div>
+    
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="hero-text">
+                    <h2 class="welcome-text">Platform Pembelajaran Digital</h2>
+                    <h1 class="main-slogan">
+                        Transformasi Pendidikan di Era Digital
+                    </h1>
+                    <p class="hero-description">
+                        DigiClass menghadirkan pengalaman belajar modern dengan teknologi terdepan. Nikmati pembelajaran interaktif, kolaboratif, dan efektif untuk guru dan siswa.
+                    </p>
+                    
+                    {% if not current_user.is_authenticated %}
+                    <div class="d-flex gap-3">
+                        <a href="{{ url_for('login') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Masuk Sekarang
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-illustration">
+                    <div class="hero-icons-wrapper">
+                        <div class="hero-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="hero-icon">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <div class="hero-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="hero-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if not current_user.is_authenticated %}
+<!-- Features Section -->
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-subtitle">Fitur Unggulan</p>
+            <h2 class="section-title">Pembelajaran Digital yang Inovatif</h2>
+            <p class="section-description">
+                Tingkatkan kualitas pembelajaran dengan fitur-fitur modern yang dirancang khusus untuk memudahkan proses belajar mengajar
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Materi Digital -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h3 class="feature-title">Materi Digital</h3>
+                    <p class="feature-description">
+                        Akses materi pembelajaran multimedia yang komprehensif dan terstruktur untuk pengalaman belajar optimal
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Materi terstruktur per topik</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Integrasi video pembelajaran</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Notifikasi materi baru</span>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">
+                            <i class="fas fa-infinity"></i>
+                            Akses Tanpa Batas
+                        </span>
+                        <span class="feature-tag">
+                            <i class="fab fa-youtube"></i>
+                            Video Pembelajaran
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Presensi Digital -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3 class="feature-title">Presensi Digital</h3>
+                    <p class="feature-description">
+                        Sistem presensi modern dengan pemantauan kehadiran real-time dan laporan otomatis yang terintegrasi
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Laporan kehadiran otomatis</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Riwayat kehadiran siswa lengkap</span>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">
+                            <i class="fas fa-bolt"></i>
+                            Real-time
+                        </span>
+                        <span class="feature-tag">
+                            <i class="fas fa-shield-alt"></i>
+                            Terverifikasi
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penugasan -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="feature-title">Penugasan Digital</h3>
+                    <p class="feature-description">
+                        Kelola tugas dengan mudah, dari pemberian hingga penilaian dengan sistem yang terintegrasi dan efisien
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Pengumpulan paperless</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Feedback terstruktur</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Notifikasi nilai</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Notifikasi tugas baru</span>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">
+                            <i class="fas fa-clock"></i>
+                            Tepat Waktu
+                        </span>
+                        <span class="feature-tag">
+                            <i class="fas fa-file-export"></i>
+                            Upload/download file
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ujian Online -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3 class="feature-title">Kuis Online</h3>
+                    <p class="feature-description">
+                        Sistem Kuis online yang aman dan mudah digunakan dengan penilaian otomatis
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Multiple choice</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Deadline pengerjaan</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Notifikasi kuis baru</span>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">
+                            <i class="fas fa-chart-bar"></i>
+                            Analisis Hasil
+                        </span>
+                        <span class="feature-tag">
+                            <i class="fas fa-check-double"></i>
+                            Auto Koreksi
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forum Diskusi -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="feature-title">Forum Diskusi</h3>
+                    <p class="feature-description">
+                        Wadah interaksi dan diskusi antara siswa dan guru untuk berbagi pengetahuan dan tanya jawab
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Diskusi per mata pelajaran</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Notifikasi Forum Diskusi</span>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">
+                            <i class="fas fa-users"></i>
+                            Kolaboratif
+                        </span>
+                        <span class="feature-tag">
+                            <i class="fas fa-share-alt"></i>
+                            Interaktif
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analisis & Laporan -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Analisis & Laporan</h3>
+                    <p class="feature-description">
+                        Pantau perkembangan pembelajaran dengan analisis data dan laporan yang komprehensif
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Statistik performa</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Laporan kemajuan</span>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">
+                            <i class="fas fa-database"></i>
+                            Data Terstruktur
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Back to Top Button -->
+<div class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('courseSearch');
+    const courseItems = document.querySelectorAll('.course-item');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            courseItems.forEach(item => {
+                const title = item.dataset.title;
+                if (title.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Back to top button functionality
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Back navigation button functionality
+    const backNavButton = document.getElementById('backNavButton');
+    
+    backNavButton.addEventListener('click', () => {
+        window.history.back();
+    });
+
+    // Show/hide back button based on history
+    if (window.history.length <= 1) {
+        backNavButton.style.display = 'none';
+    }
+
+    // Hide back buttons if no history
+    if (window.history.length <= 1) {
+        document.querySelectorAll('[onclick="window.history.back()"]').forEach(button => {
+            button.style.display = 'none';
+        });
+    }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Nilai Tugas - {{ assignment.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-tasks me-2"></i>{{ assignment.title }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Submission Info -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">Informasi Pengumpulan</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <i class="fas fa-user me-2"></i>
+                                    <strong>Siswa:</strong> {{ submission.student.username }}
+                                </p>
+                                <p class="mb-2">
+                                    <i class="fas fa-clock me-2"></i>
+                                    <strong>Waktu Pengumpulan:</strong><br>
+                                    {{ submission.submitted_at.strftime('%d %B %Y') }}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <i class="fas fa-calendar-check me-2"></i>
+                                    <strong>Status:</strong><br>
+                                    {% if submission.submitted_at <= assignment.due_date %}
+                                    <span class="badge bg-success">Tepat Waktu</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">Terlambat</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Submission Content -->
+                    {% if submission.content %}
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">Jawaban Siswa</h6>
+                        <div class="border rounded p-3 bg-light">
+                            {{ submission.content }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Uploaded File -->
+                    {% if submission.file_path %}
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">File Jawaban</h6>
+                        <div class="d-flex align-items-center p-3 border rounded">
+                            <i class="fas fa-file me-2"></i>
+                            <span>{{ submission.original_filename }}</span>
+                            {% set file_extension = submission.file_path.split('.')[-1]|lower %}
+                            {% set download_url = url_for('download_assignment_file', filename=submission.file_path) %}
+
+                            
+                            <a href="{{ download_url }}" 
+                               class="btn btn-outline-primary btn-sm ms-auto">
+                                <i class="fas fa-download me-1"></i>Download
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <hr>
+
+                    <!-- Grading Form -->
+                    <form method="POST">
+                        <div class="mb-4">
+                            <label for="score" class="form-label">
+                                <i class="fas fa-star me-2"></i>Nilai (0-100)
+                            </label>
+                            <input type="number" class="form-control" id="score" name="score" 
+                                   min="0" max="100" step="0.1" required
+                                   value="{{ submission.score if submission.score is not none else '' }}">
+                        </div>
+                        <div class="mb-4">
+                            <label for="feedback" class="form-label">
+                                <i class="fas fa-comment me-2"></i>Feedback
+                            </label>
+                            <textarea class="form-control" id="feedback" name="feedback" rows="4"
+                                    placeholder="Berikan feedback untuk siswa...">{{ submission.feedback if submission.feedback else '' }}</textarea>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Simpan Penilaian
+                            </button>
+                            <a href="{{ url_for('view_course', course_id=assignment.course_id) }}" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

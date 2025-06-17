@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Materi - {{ material.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white py-1">
+            <h3 class="mb-0">Edit Materi</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Judul Materi</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ material.title }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Konten Materi</label>
+                    <textarea class="form-control" id="content" name="content" rows="10" required>{{ material.content }}</textarea>
+                    <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    <strong>Catatan:</strong> Silakan isi konten materi menggunakan format HTML agar tersusun rapi.<br>
+                    Gunakan tag seperti: <code>&lt;h2&gt;</code> untuk judul, <code>&lt;p&gt;</code> untuk paragraf, 
+                    <code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code> untuk daftar, dan <code>&lt;strong&gt;</code> atau 
+                    <code>&lt;em&gt;</code> untuk penekanan.<br><br>
+                    </small>
+                </div>
+                <div class="mb-3">
+                    <label for="youtube_url" class="form-label">Link YouTube (opsional)</label>
+                    <input type="text" class="form-control" id="youtube_url" name="youtube_url" value="{{ material.youtube_url or '' }}" placeholder="https://youtu.be/...">
+                    <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Format yang didukung: youtube.com/watch?v= atau youtu.be/
+                    </small>
+                </div>
+                <div class="mb-3">
+                    <label for="material_file" class="form-label">Upload File Materi (opsional)</label>
+                    <input type="file" class="form-control" id="material_file" name="material_file">
+                    {% if material.file_path %}
+                    <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Format yang diizinkan: PDF, DOC, DOCX, PPT, PPTX, dll. Maksimal 16MB.
+                    </small>
+                    <div class="mt-2">
+                        <a href="{{ url_for('static', filename='uploads/' ~ material.file_path) }}" target="_blank" class="btn btn-outline-success btn-sm">
+                            Download File Materi: {{ material.original_filename or 'file' }}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Simpan Perubahan</button>
+                    <a href="{{ url_for('view_course', course_id=material.course.id) }}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>
+                        Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>       
+</div>
+{% endblock %} 

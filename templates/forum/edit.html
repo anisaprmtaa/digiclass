@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Diskusi - {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>Edit Diskusi</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Judul</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">Isi Diskusi</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required>{{ post.content }}</textarea>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+            <a href="{{ url_for('view_forum_post', post_id=post.id) }}" class="btn btn-secondary">Batal</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

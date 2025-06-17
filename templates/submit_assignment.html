@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Kumpulkan Tugas - {{ assignment.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-tasks me-2"></i>{{ assignment.title }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Assignment Details -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">Detail Tugas</h6>
+                        <p>{{ assignment.description }}</p>
+                            {% if assignment.task_file_path %}
+                                <div class="mt-1">
+                                    <a href="{{ url_for('static', filename='uploads/assignment_tasks/' ~ assignment.task_file_path) }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-file-alt me-1"></i>File Tugas: {{ assignment.task_original_filename or 'file' }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                            <br>
+                        <div class="d-flex align-items-center text-muted small">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Batas Waktu: {{ assignment.due_date.strftime('%d %B %Y') }}
+                            {% if assignment.due_date < datetime.now() %}
+                                <span class="badge bg-danger ms-2">Terlambat</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Submission Form -->
+                    {% if is_late and existing_submission %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Waktu pengumpulan sudah habis. Anda tidak dapat mengedit tugas ini lagi.
+                        </div>
+                    {% endif %}
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="content" class="form-label">
+                                <i class="fas fa-pen me-2"></i>Jawaban (Opsional)
+                            </label>
+                            <textarea class="form-control" id="content" name="content" rows="5" 
+                                    placeholder="Tulis jawaban Anda di sini..." {% if is_late and existing_submission %}readonly{% endif %}>{{ existing_submission.content if existing_submission else '' }}</textarea>
+                            <div class="form-text"><i class="fas fa-info-circle me-1"></i>
+                                Anda dapat menulis jawaban dalam bentuk teks dan/atau mengupload file.
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="submission_file" class="form-label">
+                                <i class="fas fa-file-upload me-2"></i>Upload File
+                            </label>
+                            <input type="file" class="form-control" id="submission_file" name="submission_file" {% if is_late and existing_submission %}disabled{% endif %}>
+                            <div class="form-text"><i class="fas fa-info-circle me-1"></i>
+                                Format yang diizinkan: PDF, DOC, DOCX, PPT, PPTX, dll. Maksimal 16MB.
+                            </div>
+                            {% if existing_submission and existing_submission.file_path %}
+                            <div class="mt-2">
+                                <p class="mb-2">File yang sudah diupload:</p>Format 
+                                <div class="d-flex align-items-center p-2 border rounded">
+                                    <i class="fas fa-file me-2"></i>
+                                    <span>{{ existing_submission.original_filename }}</span>
+                                    <a href="{{ url_for('download_assignment_file', filename=existing_submission.file_path) }}" 
+                                       class="btn btn-sm btn-outline-primary ms-auto">
+                                        <i class="fas fa-download me-1"></i>Download
+                                    </a>
+                                </div>
+                                <div class="form-text">
+                                    Upload file baru akan menggantikan file yang sudah ada.
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" {% if is_late and existing_submission %}disabled{% endif %}>
+                                <i class="fas fa-paper-plane me-2"></i>Kumpulkan Tugas
+                            </button>
+                            <a href="{{ url_for('view_course', course_id=assignment.course_id) }}" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

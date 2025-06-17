@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Nilai - E-Learning{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Nilai Akademik</h2>
+
+    {% if is_student %}
+        <div class="card mb-4 bg-info text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">Nilai Akhir Keseluruhan</h5>
+                <h2 class="display-4">
+                    {{ overall_final_grade|simple_float if overall_final_grade is not none else 0 }}
+                </h2>
+                <p class="lead">Grade: {{ overall_grade_letter if overall_grade_letter is not none else '-' }}</p>
+            </div>
+        </div>
+        <!-- Tampilan untuk Siswa -->
+        {% for course_id, data in course_grades.items() %}
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ data.course.title }}</h4>
+                <small>Pengajar: 
+                    {% if data.instructor and data.instructor.username %}
+                        {{ teacher_names.get(data.instructor.username, data.instructor.username) }}
+                    {% else %}
+                        Tidak diketahui
+                    {% endif %}
+                </small>
+            </div>
+            <div class="card-body">
+                <!-- PROGRESS & BADGE -->
+                <div class="row mb-4">
+                    <div class="col-md-12 mb-3">
+                        {% set total_quiz = data.course.quizzes|length %}
+                        {% set total_assignment = data.course.assignments|length %}
+                        {% set done_quiz = data.quiz_grades|length %}
+                        {% set done_assignment = data.assignment_grades|length %}
+                        {% set total = total_quiz + total_assignment %}
+                        {% set done = done_quiz + done_assignment %}
+                        {% set progress = (done / total * 100) if total > 0 else 0 %}
+                        <label class="form-label fw-bold">Progres Penyelesaian</label>
+                        <div class="progress mb-2" style="height: 24px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress|round(0, 'floor') }}%;" aria-valuenow="{{ progress|round(0, 'floor') }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ progress|round(0, 'floor') }}%
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 align-items-center mt-2">
+                            <span class="badge bg-primary"><i class="fas fa-question-circle me-1"></i> Kuis: {{ done_quiz }}/{{ total_quiz }}</span>
+                            <span class="badge bg-warning text-dark"><i class="fas fa-tasks me-1"></i> Tugas: {{ done_assignment }}/{{ total_assignment }}</span>
+                            <!-- BADGE/LENCANA -->
+                            {% if total > 0 and done == total %}
+                                <span class="badge bg-success"><i class="fas fa-award me-1"></i> Semua Selesai!</span>
+                            {% endif %}
+                            {% if data.final_grade is not none and data.final_grade >= 90 %}
+                                <span class="badge bg-warning text-dark"><i class="fas fa-medal me-1"></i> Lencana Emas</span>
+                            {% elif data.final_grade is not none and data.final_grade >= 80 %}
+                                <span class="badge bg-secondary"><i class="fas fa-medal me-1"></i> Lencana Perak</span>
+                            {% elif data.final_grade is not none and data.final_grade >= 70 %}
+                                <span class="badge bg-bronze" style="background:#cd7f32;color:#fff;"><i class="fas fa-medal me-1"></i> Lencana Perunggu</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Ringkasan Nilai -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Nilai Akhir</h5>
+                                {% if data.final_grade is not none %}
+                                    <h2 class="display-4 {% if data.final_grade >= 70 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ data.final_grade|simple_float }}
+                                    </h2>
+                                    <p class="lead">Grade: {{ data.grade_letter }}</p>
+                                {% else %}
+                                    <h2 class="display-4 text-muted">-</h2>
+                                    <p class="lead">Belum ada nilai</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Nilai Kuis (40%)</h5>
+                                {% if data.quiz_grades %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Kuis</th>
+                                                    <th>Nilai</th>
+                                                    <th>Tanggal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for title, grade in data.quiz_grades.items() %}
+                                                <tr>
+                                                    <td>{{ title }}</td>
+                                                    <td>
+                                                        {% if grade.score is not none %}
+                                                            {{ grade.score|simple_float }}
+                                                        {% else %}
+                                                            <span class="text-muted">Belum dinilai</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ grade.date|format_date if grade.date else '-' }}</td>
+                                                </tr>
+                                                {% if grade.feedback %}
+                                                <tr>
+                                                    <td>
+                                                        Feedback: {{ grade.feedback }}
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">Belum ada nilai kuis</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Nilai Tugas (60%)</h5>
+                                {% if data.assignment_grades %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tugas</th>
+                                                    <th>Nilai</th>
+                                                    <th>Tanggal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for title, grade in data.assignment_grades.items() %}
+                                                <tr>
+                                                    <td>{{ title }}</td>
+                                                    <td>
+                                                        {% if grade.score is not none %}
+                                                            {{ grade.score|simple_float }}
+                                                        {% else %}
+                                                            <span class="text-muted">Belum dinilai</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ grade.date|format_date if grade.date else '-' }}</td>
+                                                </tr>
+                                                {% if grade.feedback %}
+                                                <tr>
+                                                    <td colspan="3" class="small ps-4">
+                                                        Feedback: {{ grade.feedback }}
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">Belum ada nilai tugas</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <!-- Tampilan untuk Guru -->
+        {% if not is_student %}
+        <form method="get" class="mb-3 d-flex align-items-center gap-2">
+            <label for="kelas" class="form-label mb-0">Daftar Kelas:</label>
+            <select name="kelas" id="kelas" class="form-select w-auto" onchange="this.form.submit()">
+                <option value="">Semua Kelas</option>
+                {% for kelas in all_classes %}
+                <option value="{{ kelas }}" {% if selected_class == kelas %}selected{% endif %}>{{ kelas }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        {% endif %}
+        {% for course_id, data in course_data.items() %}
+                <div class="card mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0">{{ data.course.title }}</h4>
+                </div>
+                <a href="{{ url_for('download_grades', course_id=course_id) }}{% if selected_class %}?kelas={{ selected_class }}{% endif %}" class="btn btn-light btn-sm">
+                    <i class="fas fa-download"></i> Unduh Excel
+                </a>
+                    </div>
+                    <div class="card-body">
+                <!-- Statistik Kelas -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6>Rata-rata Kelas</h6>
+                                <h3>
+                                    {% if data.stats.average is not none %}
+                                        {{ data.stats.average|simple_float }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6>Nilai Tertinggi</h6>
+                                <h3>
+                                    {% if data.stats.highest is not none %}
+                                        {{ data.stats.highest|simple_float }}
+                        {% else %}
+                                        -
+                        {% endif %}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6>Nilai Terendah</h6>
+                                <h3>
+                                    {% if data.stats.lowest is not none %}
+                                        {{ data.stats.lowest|simple_float }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </h3>
+                </div>
+            </div>
+        </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6>Tingkat Kelulusan</h6>
+                                {% if data.stats.total_students > 0 %}
+                                    <h3>{{ (data.stats.passing_count / data.stats.total_students * 100)|simple_float }}%</h3>
+                                    <small>{{ data.stats.passing_count }}/{{ data.stats.total_students }} siswa</small>
+    {% else %}
+                                    <h3>-</h3>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Nilai Siswa -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                                    <tr>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                {% for quiz in data.course.quizzes %}
+                                            <th>{{ quiz.title }}</th>
+                                        {% endfor %}
+                                {% for assignment in data.course.assignments %}
+                                <th>{{ assignment.title }}</th>
+                                {% endfor %}
+                                <th>Nilai Akhir</th>
+                                <th>Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            {% for student_id, student_data in data.student_grades.items() %}
+                                        <tr>
+                                <td>{{ student_data.student.username }}</td>
+                                <td>{{ student_data.student.kelas }}</td>
+                                {% for quiz in data.course.quizzes %}
+                                                <td>
+                                    {{ student_data.quiz_grades[quiz.title]|simple_float if quiz.title in student_data.quiz_grades and student_data.quiz_grades[quiz.title] is not none else '0%' }}
+                                                </td>
+                                            {% endfor %}
+                                {% for assignment in data.course.assignments %}
+                                <td>
+                                    {{ student_data.assignment_grades[assignment.title].score|simple_float if assignment.title in student_data.assignment_grades and student_data.assignment_grades[assignment.title].score is not none else '0%' }}
+                                </td>
+                                            {% endfor %}
+                                <td>
+                                    {% if student_data.final_grade is not none %}
+                                        <span class="{% if student_data.final_grade >= 70 %}text-success{% else %}text-danger{% endif %}">
+                                            {{ student_data.final_grade|simple_float }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ student_data.grade_letter }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    {% endif %}
+</div>
+
+<!-- Tambahkan CSS untuk styling -->
+<style>
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.card-header {
+    border-bottom: none;
+}
+.table th {
+    white-space: nowrap;
+}
+.text-success {
+    color: #28a745 !important;
+}
+.text-danger {
+    color: #dc3545 !important;
+}
+.text-muted {
+    color: #6c757d !important;
+}
+.bg-bronze {
+    background: #cd7f32 !important;
+    color: #fff !important;
+}
+</style>
+{% endblock %} 

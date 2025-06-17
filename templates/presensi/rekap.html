@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Rekap Kehadiran - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Back Button -->
+    <a href="{{ url_for('view_course', course_id=course.id) }}" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Kembali ke Materi pembelajaran
+    </a>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-clipboard-list me-2"></i>Rekap Kehadiran Siswa - {{ course.title }}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <select class="form-select" id="filterKelas">
+                        <option value="">Semua Kelas</option>
+                        {% for kelas in kelas_list %}
+                        <option value="{{ kelas }}">{{ kelas }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="filterTanggal">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nama Siswa</th>
+                            <th>Kelas</th>
+                            <th>Status</th>
+                            <th>Waktu</th>
+                            <th>Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if presensi_list %}
+                            {% for presensi in presensi_list %}
+                            <tr>
+                                <td>{{ presensi.siswa.nama }}</td>
+                                <td>{{ presensi.siswa.kelas }}</td>
+                                <td>
+                                    <span class="badge {% if presensi.status == 'Hadir' %}bg-success{% elif presensi.status == 'Sakit' %}bg-warning{% else %}bg-info{% endif %}">
+                                        {{ presensi.status }}
+                                    </span>
+                                </td>
+                                <td>{{ presensi.waktu.strftime('%H:%M') }}</td>
+                                <td>{{ presensi.catatan or '-' }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    Belum ada data kehadiran untuk hari ini
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0">{{ hadir_percentage }}%</h3>
+                            <p class="mb-0">Hadir</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0">{{ sakit_percentage }}%</h3>
+                            <p class="mb-0">Sakit</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0">{{ izin_percentage }}%</h3>
+                            <p class="mb-0">Izin</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

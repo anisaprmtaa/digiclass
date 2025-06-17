@@ -1,0 +1,52 @@
+[
+  {
+    "pertanyaan": "Iman kepada malaikat termasuk rukun iman yang ke-...",
+    "options": ["Pertama", "Kedua", "Ketiga", "Keempat"],
+    "correct_answer": "B"
+  },
+  {
+    "pertanyaan": "Malaikat yang mencatat amal baik manusia adalah ...",
+    "options": ["Atid", "Raqib", "Mikail", "Ridwan"],
+    "correct_answer": "B"
+  },
+  {
+    "pertanyaan": "Malaikat Ridwan bertugas menjaga ...",
+    "options": ["Surga", "Neraka", "Alam kubur", "Hati manusia"],
+    "correct_answer": "A"
+  },
+  {
+    "pertanyaan": "Malaikat Malik bertugas menjaga ...",
+    "options": ["Surga", "Neraka", "Manusia", "Kitab amal"],
+    "correct_answer": "B"
+  },
+  {
+    "pertanyaan": "Malaikat yang bertugas menanyai manusia di alam kubur adalah ...",
+    "options": ["Jibril dan Mikail", "Malik dan Ridwan", "Munkar dan Nakir", "Atid dan Raqib"],
+    "correct_answer": "C"
+  },
+  {
+    "pertanyaan": "Salah satu sifat malaikat adalah ...",
+    "options": ["Mempunyai hawa nafsu", "Bisa berubah bentuk", "Selalu taat kepada Allah", "Memakan makanan manusia"],
+    "correct_answer": "C"
+  },
+  {
+    "pertanyaan": "Jumlah malaikat yang wajib kita ketahui ada ...",
+    "options": ["5", "7", "10", "25"],
+    "correct_answer": "C"
+  },
+  {
+    "pertanyaan": "Malaikat Mikail bertugas ...",
+    "options": ["Mengatur rezeki dan alam", "Mencabut nyawa", "Meniup sangkakala", "Menjaga surga"],
+    "correct_answer": "A"
+  },
+  {
+    "pertanyaan": "Siapakah yang mencatat amal buruk manusia?",
+    "options": ["Mikail", "Jibril", "Atid", "Israfil"],
+    "correct_answer": "C"
+  },
+  {
+    "pertanyaan": "Hikmah beriman kepada malaikat adalah berikut ini, kecuali ...",
+    "options": ["Menambah keimanan kepada Allah", "Menjadi lebih waspada dalam berbuat", "Merasa bebas melakukan apapun", "Termotivasi untuk berbuat baik"],
+    "correct_answer": "C"
+  }
+] 

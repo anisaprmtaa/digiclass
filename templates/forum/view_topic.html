@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic.title }} - Forum{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="mb-4">
+        <a href="{{ url_for('course_forum', course_id=topic.course_id) }}" class="text-decoration-none">
+            <i class="fas fa-arrow-left me-2"></i>Kembali ke Forum Diskusi
+        </a>
+    </div>
+
+    <!-- Topik -->
+    <div class="card mb-4">
+        <div class="card-header {% if topic.is_announcement %}bg-info text-white{% endif %}">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    {% if topic.is_announcement %}📢{% endif %}
+                    {{ topic.title }}
+                </h4>
+                {% if current_user.id == topic.user_id or 
+                   (current_user.role == 'guru' and current_user.id == topic.course.instructor_id) %}
+                <a href="{{ url_for('delete_topic', topic_id=topic.id) }}" 
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Yakin ingin menghapus topik ini?')">
+                    Hapus
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <strong>{{ topic.user.username }}</strong>
+                    {% if topic.user.role == 'guru' %}
+                    <span class="badge bg-primary ms-2">Guru</span>
+                    {% endif %}
+                </div>
+                <small class="text-muted">{{ topic.created_at.strftime('%d %B %Y') }}</small>
+            </div>
+            <p class="card-text">{{ topic.content }}</p>
+        </div>
+    </div>
+
+    <!-- Balasan -->
+    <h5 class="mb-3">Balasan ({{ replies|length }})</h5>
+    {% for reply in replies %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <strong>{{ reply.user.username }}</strong>
+                    {% if reply.user.role == 'guru' %}
+                    <span class="badge bg-primary ms-2">Guru</span>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-items-center">
+                    <small class="text-muted me-3">{{ reply.created_at.strftime('%d %B %Y') }}</small>
+                    {% if current_user.id == reply.user_id or 
+                       (current_user.role == 'guru' and current_user.id == topic.course.instructor_id) %}
+                    <a href="{{ url_for('delete_reply', reply_id=reply.id) }}" 
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Yakin ingin menghapus balasan ini?')">
+                        Hapus
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <p class="card-text">{{ reply.content }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Form Balas -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Tambah Balasan</h5>
+            <form method="POST">
+                <div class="mb-3">
+                    <textarea class="form-control" name="content" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Kirim Balasan</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

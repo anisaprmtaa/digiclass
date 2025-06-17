@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Bantuan - DigiClass{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <!-- Sidebar Navigation -->
+            <div class="list-group shadow-sm sticky-top" style="top: 2rem;">
+                <a href="#panduan" class="list-group-item list-group-item-action">
+                    <i class="fas fa-book me-2"></i>Panduan Penggunaan
+                </a>
+                <a href="#faq" class="list-group-item list-group-item-action">
+                    <i class="fas fa-question-circle me-2"></i>FAQ
+                </a>
+                <a href="#kontak" class="list-group-item list-group-item-action">
+                    <i class="fas fa-envelope me-2"></i>Kontak Support
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <!-- Panduan Penggunaan -->
+            <div class="card shadow-sm mb-4" id="panduan">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-book me-2"></i>Panduan Penggunaan
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="mb-3">Untuk Siswa</h6>
+                    <div class="mb-4">
+                        <ol class="list-group list-group-numbered">
+                            <li class="list-group-item">Login menggunakan NISN</li>
+                            <li class="list-group-item">Akses mata pelajaran yang tersedia</li>
+                            <li class="list-group-item">Lihat materi pembelajaran</li>
+                            <li class="list-group-item">Kerjakan kuis dan tugas</li>
+                            <li class="list-group-item">Berpartisipasi dalam forum diskusi</li>
+                        </ol>
+                    </div>
+
+                    <h6 class="mb-3">Untuk Guru</h6>
+                    <div class="mb-4">
+                        <ol class="list-group list-group-numbered">
+                            <li class="list-group-item">Login menggunakan NIP</li>
+                            <li class="list-group-item">Kelola mata pelajaran yang diampu</li>
+                            <li class="list-group-item">Upload materi pembelajaran</li>
+                            <li class="list-group-item">Buat dan nilai kuis/tugas</li>
+                            <li class="list-group-item">Moderasi forum diskusi</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="card shadow-sm mb-4" id="faq">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-question-circle me-2"></i>Pertanyaan yang Sering Diajukan
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Bagaimana jika lupa password?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Silakan hubungi administrator sekolah untuk mereset password Anda.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Format file apa yang didukung untuk pengumpulan tugas?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Format yang didukung: PDF, DOC, DOCX, TXT, PNG, JPG, JPEG, GIF, PPT, PPTX. Maksimal ukuran file 16MB.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Bagaimana cara melihat nilai?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Klik menu "Nilai" di navbar untuk melihat nilai kuis dan tugas Anda.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kontak Support -->
+            <div class="card shadow-sm" id="kontak">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-envelope me-2"></i>Kontak Support
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-3">Bantuan Teknis</h6>
+                            <p>
+                                <i class="fas fa-envelope me-2"></i>Email: support@digiclass.com<br>
+                                <i class="fas fa-phone me-2"></i>Telepon: (021) 1234567<br>
+                                <i class="fas fa-clock me-2"></i>Jam Kerja: Senin-Jumat, 08:00-16:00
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="mb-3">Media Sosial</h6>
+                            <p>
+                                <i class="fab fa-whatsapp me-2"></i>WhatsApp: 0812-3456-7890<br>
+                                <i class="fab fa-telegram me-2"></i>Telegram: @digiclass_support
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

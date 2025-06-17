@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Profil - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card profile-card">
+                <div class="card-body text-center">
+                    <div class="profile-photo-container mb-4">
+                        {% if current_user.profile_photo and current_user.profile_photo != 'default.jpg' %}
+                            <img src="{{ url_for('static', filename='uploads/' + current_user.profile_photo) }}" 
+                                 class="profile-photo" 
+                                 alt="Foto Profil">
+                        {% else %}
+                            <div class="default-photo">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        {% endif %}
+                        <div class="profile-photo-overlay">
+                            <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">
+                                <i class="fas fa-camera"></i> Ganti Foto
+                            </button>
+                        </div>
+                    </div>
+                    <h4 class="card-title mb-0">{{ user.username }}</h4>
+                    {% if user.role == 'guru' %}
+                        <div class="role-badge guru">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            Guru
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-id-card"></i>
+                            <span><strong>NIP:</strong> {{ user.nip or '-' }}</span>
+                        </div>
+                    {% else %}
+                        <div class="role-badge siswa">
+                            <i class="fas fa-user-graduate"></i>
+                            Siswa
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-id-card"></i>
+                            <span><strong>NISN:</strong> {{ user.nisn or '-' }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span><strong>Kelas:</strong> {{ user.kelas or '-' }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><strong>Email:</strong> {{ user.email }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course List -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-book me-2"></i>
+                        {% if user.role == 'guru' %}
+                            Mata Pelajaran yang Diampu
+                        {% else %}
+                            Mata Pelajaran yang Diikuti
+                        {% endif %}
+                    </h5>
+                    {% if courses %}
+                    <div class="row g-4">
+                        {% for course in courses %}
+                        <div class="col-md-6">
+                            <div class="card course-card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ course.title }}</h6>
+                                    <p class="card-text text-muted small">
+                                        <i class="fas fa-user-tie me-1"></i>
+                                        {{ teacher_names.get(course.instructor.username, course.instructor.username) }}
+                                    </p>
+                                    <p class="card-text">{{ course.description[:100] }}{% if course.description|length > 100 %}...{% endif %}</p>
+                                    <a href="{{ url_for('view_course', course_id=course.id) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-book me-1"></i>Lihat Mata Pelajaran
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-book-open fa-3x mb-3"></i>
+                        <p>Belum ada mata pelajaran</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Update Profile Form -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-user-edit me-2"></i>
+                        Update Profil
+                    </h5>
+                    <form method="POST" action="{{ url_for('update_profile') }}" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password Saat Ini</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" name="current_password" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Password Baru (opsional)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    <input type="password" class="form-control" name="new_password">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Konfirmasi Password Baru</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-check"></i></span>
+                                    <input type="password" class="form-control" name="confirm_password">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Simpan Perubahan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Photo Modal -->
+<div class="modal fade" id="uploadPhotoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-camera me-2"></i>
+                    Upload Foto Profil
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('upload_profile_photo') }}" method="POST" enctype="multipart/form-data" id="uploadPhotoForm">
+                    <div class="mb-3">
+                        <label class="form-label">Pilih Foto</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-image"></i></span>
+                            <input type="file" class="form-control" name="photo" accept="image/jpeg,image/png" required>
+                        </div>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Format yang diizinkan: JPG, JPEG, PNG. Maksimal 5MB.
+                        </div>
+                    </div>
+                    <div class="preview-container d-none mb-3">
+                        <img src="" id="photoPreview" class="img-fluid rounded">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Batal
+                </button>
+                <button type="submit" form="uploadPhotoForm" class="btn btn-primary">
+                    <i class="fas fa-upload me-1"></i>Upload
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.role-badge.guru {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.role-badge.guru:hover {
+    background: rgba(5, 150, 105, 0.2);
+    transform: translateY(-2px);
+}
+
+.role-badge.siswa {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.role-badge.siswa:hover {
+    background: rgba(37, 99, 235, 0.2);
+    transform: translateY(-2px);
+}
+
+.role-badge i {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.profile-photo-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.default-photo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #6c757d, #495057);
+}
+
+.default-photo i {
+    font-size: 80px;
+    color: #fff;
+}
+
+.profile-photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    padding: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.profile-photo-container:hover .profile-photo-overlay {
+    opacity: 1;
+}
+
+.course-card {
+    border: none;
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #6b7280;
+}
+
+.info-item i {
+    width: 1.5rem;
+    color: #2563eb;
+}
+
+.preview-container {
+    max-width: 300px;
+    margin: 1rem auto;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+#photoPreview {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+}
+
+.input-group .form-control {
+    border-left: none;
+}
+
+.input-group .form-control:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+}
+</style>
+
+<script>
+// Preview foto sebelum upload
+document.querySelector('input[name="photo"]').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Validasi ukuran file
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            alert('Ukuran file terlalu besar. Maksimal 5MB.');
+            this.value = '';
+            return;
+        }
+
+        // Validasi tipe file
+        if (!['image/jpeg', 'image/png'].includes(file.type)) {
+            alert('Format file tidak diizinkan. Gunakan JPG, JPEG, atau PNG.');
+            this.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.src = e.target.result;
+            document.querySelector('.preview-container').classList.remove('d-none');
+        }
+        reader.readAsDataURL(file);
+    } else {
+        document.querySelector('.preview-container').classList.add('d-none');
+    }
+});
+
+// Form validation
+document.querySelector('form.needs-validation').addEventListener('submit', function(event) {
+    if (!this.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    this.classList.add('was-validated');
+});
+
+// Password validation
+document.querySelector('input[name="confirm_password"]').addEventListener('input', function() {
+    const newPassword = document.querySelector('input[name="new_password"]').value;
+    if (this.value !== newPassword) {
+        this.setCustomValidity('Password tidak cocok');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>
+{% endblock %} 
